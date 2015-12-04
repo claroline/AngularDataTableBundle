@@ -1,48 +1,26 @@
 {
-  "_args": [
-    [
-      "angular-data-table",
-      "/var/www/html/nico/Claroline5/vendor/claroline/angular-data-table-bundle/Claroline/AngularDataTableBundle/Resources/public/js"
-    ]
-  ],
-  "_from": "angular-data-table@*",
-  "_id": "angular-data-table@0.4.8",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/angular-data-table",
-  "_nodeVersion": "0.12.7",
-  "_npmUser": {
-    "email": "amcdaniel2@gmail.com",
-    "name": "amcdnl"
-  },
-  "_npmVersion": "2.11.3",
-  "_phantomChildren": {},
-  "_requested": {
-    "name": "angular-data-table",
-    "raw": "angular-data-table",
-    "rawSpec": "",
-    "scope": null,
-    "spec": "*",
-    "type": "range"
-  },
-  "_requiredBy": [
-    "#USER"
-  ],
-  "_resolved": "https://registry.npmjs.org/angular-data-table/-/angular-data-table-0.4.8.tgz",
-  "_shasum": "7de28385124fa4301954f7381134cc4abcda406a",
-  "_shrinkwrap": null,
-  "_spec": "angular-data-table",
-  "_where": "/var/www/html/nico/Claroline5/vendor/claroline/angular-data-table-bundle/Claroline/AngularDataTableBundle/Resources/public/js",
-  "author": {
-    "email": "austin@swimlane.com",
-    "name": "Swimlane",
-    "url": "http://swimlane.com/"
-  },
-  "bugs": {
-    "url": "https://github.com/Swimlane/angular-data-table/issues"
-  },
-  "dependencies": {},
+  "name": "angular-data-table",
+  "title": "AngularJS Data-Table",
   "description": "A feature-rich but lightweight ES6 AngularJS Data Table crafted for large data sets!",
+  "version": "0.4.11",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Swimlane/angular-data-table.git",
+    "github": "http://github.com/Swimlane/angular-data-table.git"
+  },
+  "main": "./release/dataTable.js",
+  "homepage": "http://swimlane.com/",
+  "author": {
+    "name": "Swimlane",
+    "email": "austin@swimlane.com",
+    "web": "http://swimlane.com/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.php"
+    }
+  ],
   "devDependencies": {
     "angular": "^1.4.4",
     "angular-mocks": "^1.4.3",
@@ -81,13 +59,7 @@
     "systemjs-builder": "^0.11.3",
     "vinyl-paths": "^1.0.0"
   },
-  "directories": {},
-  "dist": {
-    "shasum": "7de28385124fa4301954f7381134cc4abcda406a",
-    "tarball": "http://registry.npmjs.org/angular-data-table/-/angular-data-table-0.4.8.tgz"
-  },
-  "gitHead": "369a0ee3f02ea73fff52b4c22b7bb0ec9cfc68f5",
-  "homepage": "http://swimlane.com/",
+  "dependencies": {},
   "jspm": {
     "dependencies": {
       "angular": "npm:angular@^1.4.0"
@@ -97,29 +69,5 @@
       "babel-runtime": "npm:babel-runtime@^5.6.4",
       "core-js": "npm:core-js@^1.1.1"
     }
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://opensource.org/licenses/mit-license.php"
-    }
-  ],
-  "main": "./release/dataTable.js",
-  "maintainers": [
-    {
-      "name": "amcdnl",
-      "email": "amcdaniel2@gmail.com"
-    }
-  ],
-  "name": "angular-data-table",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "github": "http://github.com/Swimlane/angular-data-table.git",
-    "type": "git",
-    "url": "git+ssh://git@github.com/Swimlane/angular-data-table.git"
-  },
-  "scripts": {},
-  "title": "AngularJS Data-Table",
-  "version": "0.4.8"
+  }
 }

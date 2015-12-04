@@ -318,7 +318,7 @@ class CellController {
    */
   onCheckboxChanged(event){
     event.stopPropagation();
-    this.onCheckboxChange();
+    this.onCheckboxChange({ $event: event });
   }
 
   /**
@@ -398,7 +398,7 @@ function CellDirective($rootScope, $compile, $log, $timeout){
             } else {
               content[0].textContent = ctrl.getValue();
             }
-          });
+          }, true);
         }
       }
     }
@@ -607,8 +607,9 @@ class RowController {
   /**
    * Invoked when the cell directive's checkbox changed state
    */
-  onCheckboxChanged(){
+  onCheckboxChanged(ev){
     this.onCheckboxChange({
+      $event: ev,
       row: this.row
     });
   }
@@ -651,7 +652,7 @@ function RowDirective(){
                    column="column"
                    options="rowCtrl.options"
                    has-children="rowCtrl.hasChildren"
-                   on-checkbox-change="rowCtrl.onCheckboxChanged()"
+                   on-checkbox-change="rowCtrl.onCheckboxChanged($event)"
                    selected="rowCtrl.selected"
                    expanded="rowCtrl.expanded"
                    row="rowCtrl.row"
@@ -668,7 +669,7 @@ function RowDirective(){
                    expanded="rowCtrl.expanded"
                    selected="rowCtrl.selected"
                    row="rowCtrl.row"
-                   on-checkbox-change="rowCtrl.onCheckboxChanged()"
+                   on-checkbox-change="rowCtrl.onCheckboxChanged($event)"
                    value="rowCtrl.getValue(column)">
           </dt-cell>
         </div>
@@ -681,7 +682,7 @@ function RowDirective(){
                    options="rowCtrl.options"
                    has-children="rowCtrl.hasChildren"
                    selected="rowCtrl.selected"
-                   on-checkbox-change="rowCtrl.onCheckboxChanged()"
+                   on-checkbox-change="rowCtrl.onCheckboxChanged($event)"
                    row="rowCtrl.row"
                    expanded="rowCtrl.expanded"
                    value="rowCtrl.getValue(column)">
@@ -777,8 +778,8 @@ class SelectionController {
    * @param  {index}
    * @param  {row}
    */
-  onCheckboxChange(index, row){
-    this.selectRow({}, index, row);
+  onCheckboxChange(event, index, row){
+    this.selectRow(event, index, row);
   }
 
   /**
@@ -822,8 +823,8 @@ class SelectionController {
     var reverse = index < this.prevIndex,
         selecteds = [];
 
-    for(var i=0, len=this.body.tempRows.length; i < len; i++) {
-      var row = this.body.tempRows[i],
+    for(var i=0, len=this.body.rows.length; i < len; i++) {
+      var row = this.body.rows[i],
           greater = i >= this.prevIndex && i <= index,
           lesser = i <= this.prevIndex && i >= index;
 
@@ -1513,12 +1514,12 @@ function BodyDirective($timeout){
                   columns="body.columns"
                   column-widths="body.columnWidths"
                   ng-keydown="selCtrl.keyDown($event, $index, r)"
-                  ng-click="selCtrl.rowClicked($event, $index, r)"
+                  ng-click="selCtrl.rowClicked($event, r.$$index, r)"
                   on-tree-toggle="body.onTreeToggled(row, cell)"
                   ng-class="body.rowClasses(r)"
                   options="body.options"
                   selected="body.isSelected(r)"
-                  on-checkbox-change="selCtrl.onCheckboxChange($index, row)"
+                  on-checkbox-change="selCtrl.onCheckboxChange($event, $index, row)"
                   columns="body.columnsByPin"
                   has-children="body.getRowHasChildren(r)"
                   expanded="body.getRowExpanded(r)"
@@ -2558,7 +2559,7 @@ class DataTableController {
    */
   /*@ngInject*/
   constructor($scope, $filter, $log, $transclude){
-    angular.extend(this, {
+    Object.assign(this, {
       $scope: $scope,
       $filter: $filter,
       $log: $log
@@ -2570,9 +2571,7 @@ class DataTableController {
     this.options.$outer = $scope.$parent;
 
     $scope.$watch('dt.options.columns', (newVal, oldVal) => {
-      if(newVal.length > oldVal.length){
-        this.transposeColumnDefaults();
-      }
+      this.transposeColumnDefaults();
 
       if(newVal.length !== oldVal.length){
         this.adjustColumns();

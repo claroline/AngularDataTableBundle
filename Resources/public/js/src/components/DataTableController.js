@@ -12,7 +12,7 @@ export class DataTableController {
    */
   /*@ngInject*/
   constructor($scope, $filter, $log, $transclude){
-    angular.extend(this, {
+    Object.assign(this, {
       $scope: $scope,
       $filter: $filter,
       $log: $log
@@ -24,9 +24,7 @@ export class DataTableController {
     this.options.$outer = $scope.$parent;
 
     $scope.$watch('dt.options.columns', (newVal, oldVal) => {
-      if(newVal.length > oldVal.length){
-        this.transposeColumnDefaults();
-      }
+      this.transposeColumnDefaults();
 
       if(newVal.length !== oldVal.length){
         this.adjustColumns();
