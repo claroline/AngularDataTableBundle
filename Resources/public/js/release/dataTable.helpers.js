@@ -622,6 +622,7 @@
             } else {
               var idx = this.selected.indexOf(row);
               if (idx > -1) {
+                this.body.onUncheck({ rows: [row] });
                 this.selected.splice(idx, 1);
               } else {
                 if (this.options.multiSelectOnShift && this.selected.length === 1) {
@@ -1218,6 +1219,7 @@
         onPage: '&',
         onTreeToggle: '&',
         onSelect: '&',
+        onUncheck: '&',
         onRowClick: '&'
       },
       scope: true,
@@ -2165,12 +2167,16 @@
         if (this.rows) {
           var matches = this.selected.length === this.rows.length;
           this.selected.splice(0, this.selected.length);
+          var isChecked = false;
 
           if (!matches) {
             var _selected;
 
             (_selected = this.selected).push.apply(_selected, _toConsumableArray(this.rows));
+            isChecked = true;
           }
+
+          this.onHeaderCheckboxChanged({ isChecked: isChecked });
         }
       }
     }, {
@@ -2200,6 +2206,13 @@
         });
       }
     }, {
+      key: "onUnchecked",
+      value: function onUnchecked(rows) {
+        this.onUncheck({
+          rows: rows
+        });
+      }
+    }, {
       key: "onRowClicked",
       value: function onRowClicked(row) {
         this.onRowClick({
@@ -2223,10 +2236,12 @@
         selected: '=?',
         expanded: '=?',
         onSelect: '&',
+        onUncheck: '&',
         onSort: '&',
         onTreeToggle: '&',
         onPage: '&',
-        onRowClick: '&'
+        onRowClick: '&',
+        onHeaderCheckboxChanged: '&'
       },
       controllerAs: 'dt',
       template: function template(element) {
@@ -2234,7 +2249,7 @@
             id = ObjectId();
         DataTableService.saveColumns(id, columns);
 
-        return "<div class=\"dt\" ng-class=\"dt.tableCss()\" data-column-id=\"" + id + "\">\n          <dt-header options=\"dt.options\"\n                     on-checkbox-change=\"dt.onHeaderCheckboxChange()\"\n                     columns=\"dt.columnsByPin\"\n                     column-widths=\"dt.columnWidths\"\n                     ng-if=\"dt.options.headerHeight\"\n                     on-resize=\"dt.onResize(column, width)\"\n                     selected=\"dt.isAllRowsSelected()\"\n                     on-sort=\"dt.onSorted()\">\n          </dt-header>\n          <dt-body rows=\"dt.rows\"\n                   selected=\"dt.selected\"\n                   expanded=\"dt.expanded\"\n                   columns=\"dt.columnsByPin\"\n                   on-select=\"dt.onSelected(rows)\"\n                   on-row-click=\"dt.onRowClicked(row)\"\n                   column-widths=\"dt.columnWidths\"\n                   options=\"dt.options\"\n                   on-page=\"dt.onBodyPage(offset, size)\"\n                   on-tree-toggle=\"dt.onTreeToggled(row, cell)\">\n           </dt-body>\n          <dt-footer ng-if=\"dt.options.footerHeight\"\n                     ng-style=\"{ height: dt.options.footerHeight + 'px' }\"\n                     on-page=\"dt.onFooterPage(offset, size)\"\n                     paging=\"dt.options.paging\">\n           </dt-footer>\n        </div>";
+        return "<div class=\"dt\" ng-class=\"dt.tableCss()\" data-column-id=\"" + id + "\">\n          <dt-header options=\"dt.options\"\n                     on-checkbox-change=\"dt.onHeaderCheckboxChange()\"\n                     columns=\"dt.columnsByPin\"\n                     column-widths=\"dt.columnWidths\"\n                     ng-if=\"dt.options.headerHeight\"\n                     on-resize=\"dt.onResize(column, width)\"\n                     selected=\"dt.isAllRowsSelected()\"\n                     on-header-checkbox-changed=\"dt.onHeaderCheckboxChanged(isChecked)\"\n                     on-sort=\"dt.onSorted()\">\n          </dt-header>\n          <dt-body rows=\"dt.rows\"\n                   selected=\"dt.selected\"\n                   expanded=\"dt.expanded\"\n                   columns=\"dt.columnsByPin\"\n                   on-select=\"dt.onSelected(rows)\"\n                   on-uncheck=\"dt.onUnchecked(rows)\"\n                   on-row-click=\"dt.onRowClicked(row)\"\n                   column-widths=\"dt.columnWidths\"\n                   options=\"dt.options\"\n                   on-page=\"dt.onBodyPage(offset, size)\"\n                   on-tree-toggle=\"dt.onTreeToggled(row, cell)\">\n           </dt-body>\n          <dt-footer ng-if=\"dt.options.footerHeight\"\n                     ng-style=\"{ height: dt.options.footerHeight + 'px' }\"\n                     on-page=\"dt.onFooterPage(offset, size)\"\n                     paging=\"dt.options.paging\">\n           </dt-footer>\n        </div>";
       },
       compile: function compile(tElem, tAttrs) {
         return {

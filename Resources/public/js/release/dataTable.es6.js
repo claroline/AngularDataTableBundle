@@ -798,6 +798,7 @@ class SelectionController {
         } else {
           var idx = this.selected.indexOf(row);
           if(idx > -1){
+            this.body.onUncheck({rows: [ row ]});
             this.selected.splice(idx, 1);
           } else {
             if(this.options.multiSelectOnShift && this.selected.length === 1) {
@@ -1484,6 +1485,7 @@ function BodyDirective($timeout){
       onPage: '&',
       onTreeToggle: '&',
       onSelect: '&',
+      onUncheck: '&',
       onRowClick: '&'
     },
     scope: true,
@@ -2754,10 +2756,14 @@ class DataTableController {
     if(this.rows){
       var matches = this.selected.length === this.rows.length;
       this.selected.splice(0, this.selected.length);
+      var isChecked = false;
 
       if(!matches){
         this.selected.push(...this.rows);
+        isChecked = true;
       }
+
+      this.onHeaderCheckboxChanged({isChecked: isChecked});
     }
   }
 
@@ -2798,6 +2804,16 @@ class DataTableController {
   }
 
   /**
+   * Occurs when a row is unchecked
+   * @param  {object} rows
+   */
+  onUnchecked(rows){
+    this.onUncheck({
+      rows: rows
+    });
+  }
+
+  /**
    * Occurs when a row was click but may not be selected.
    * @param  {object} row
    */
@@ -2806,7 +2822,6 @@ class DataTableController {
       row: row
     });
   }
-
 }
 
 function DataTableDirective($window, $timeout, $parse){
@@ -2821,10 +2836,12 @@ function DataTableDirective($window, $timeout, $parse){
       selected: '=?',
       expanded: '=?',
       onSelect: '&',
+      onUncheck: '&',
       onSort: '&',
       onTreeToggle: '&',
       onPage: '&',
-      onRowClick: '&'
+      onRowClick: '&',
+      onHeaderCheckboxChanged: '&'
     },
     controllerAs: 'dt',
     template: function(element){
@@ -2842,6 +2859,7 @@ function DataTableDirective($window, $timeout, $parse){
                      ng-if="dt.options.headerHeight"
                      on-resize="dt.onResize(column, width)"
                      selected="dt.isAllRowsSelected()"
+                     on-header-checkbox-changed="dt.onHeaderCheckboxChanged(isChecked)"
                      on-sort="dt.onSorted()">
           </dt-header>
           <dt-body rows="dt.rows"
@@ -2849,6 +2867,7 @@ function DataTableDirective($window, $timeout, $parse){
                    expanded="dt.expanded"
                    columns="dt.columnsByPin"
                    on-select="dt.onSelected(rows)"
+                   on-uncheck="dt.onUnchecked(rows)"
                    on-row-click="dt.onRowClicked(row)"
                    column-widths="dt.columnWidths"
                    options="dt.options"
